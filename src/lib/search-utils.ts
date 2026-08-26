@@ -48,12 +48,17 @@ export function buildPropertyWhereClause(filters: SearchFilters): Prisma.Propert
     where.locality = { contains: filters.locality }
   }
 
+  const rentFilter: { gte?: number; lte?: number } = {}
   if (filters.minRent !== undefined) {
-    where.rent = { ...where.rent as object || {}, gte: filters.minRent }
+    rentFilter.gte = filters.minRent
   }
 
   if (filters.maxRent !== undefined) {
-    where.rent = { ...where.rent as object || {}, lte: filters.maxRent }
+    rentFilter.lte = filters.maxRent
+  }
+
+  if (rentFilter.gte !== undefined || rentFilter.lte !== undefined) {
+    where.rent = rentFilter
   }
 
   if (filters.bedroomType) {

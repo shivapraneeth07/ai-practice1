@@ -87,7 +87,7 @@ export default function AdminReportsPage() {
                 <p className="text-sm text-muted-foreground">
                   By: {r.reporter.name} ({r.reporter.email})
                 </p>
-                {r.description && <p className="mt-1 text-sm">"{r.description}"</p>}
+                {r.description && <p className="mt-1 text-sm">&ldquo;{r.description}&rdquo;</p>}
                 <p className="mt-1 text-xs text-muted-foreground">{formatDate(r.createdAt)}</p>
               </div>
               <Badge variant={r.status === 'PENDING' ? 'warning' : r.status === 'DISMISSED' ? 'secondary' : 'success'}>

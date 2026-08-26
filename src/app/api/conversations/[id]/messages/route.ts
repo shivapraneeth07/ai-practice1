@@ -80,12 +80,17 @@ export async function POST(
 
     const otherUserId =
       conversation.seekerId === user.id ? conversation.ownerId : conversation.seekerId
+    const otherUser = await prisma.user.findUnique({
+      where: { id: otherUserId },
+      select: { role: true },
+    })
+    const messagesBase = otherUser?.role === 'OWNER' ? '/owner' : '/seeker'
     await createNotification({
       userId: otherUserId,
       type: 'MESSAGE',
       title: 'New Message',
       message: `${user.name} sent you a message`,
-      link: `/messages/${conversation.id}`,
+      link: `${messagesBase}/messages/${conversation.id}`,
     })
 
     return NextResponse.json({ message }, { status: 201 })

@@ -77,7 +77,7 @@ export function VisitRequestCard({
           <p className="mt-1 text-sm text-muted-foreground">
             {formatDate(visit.date)} at {visit.time}
           </p>
-          {visit.message && <p className="mt-1 text-xs text-muted-foreground">"{visit.message}"</p>}
+          {visit.message && <p className="mt-1 text-xs text-muted-foreground">&ldquo;{visit.message}&rdquo;</p>}
           {visit.ownerResponse && (
             <p className="mt-1 rounded-md bg-muted p-2 text-xs">
               Owner response: {visit.ownerResponse}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { Loader2, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ export function ChatView({ conversationId }: { conversationId: string }) {
   const [sending, setSending] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetch(`/api/conversations/${conversationId}/messages`)
@@ -29,11 +29,11 @@ export function ChatView({ conversationId }: { conversationId: string }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [conversationId])
 
   useEffect(() => {
     load()
-  }, [conversationId])
+  }, [load])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
