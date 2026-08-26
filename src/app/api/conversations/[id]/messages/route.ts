@@ -80,11 +80,8 @@ export async function POST(
 
     const otherUserId =
       conversation.seekerId === user.id ? conversation.ownerId : conversation.seekerId
-    const otherUser = await prisma.user.findUnique({
-      where: { id: otherUserId },
-      select: { role: true },
-    })
-    const messagesBase = otherUser?.role === 'OWNER' ? '/owner' : '/seeker'
+    const recipientRole = conversation.seekerId === user.id ? 'OWNER' : 'SEEKER'
+    const messagesBase = recipientRole === 'OWNER' ? '/owner' : '/seeker'
     await createNotification({
       userId: otherUserId,
       type: 'MESSAGE',
