@@ -1,5 +1,6 @@
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
+import { put } from '@vercel/blob'
 import { uid } from '@/lib/utils'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -18,11 +19,20 @@ export function validateImage(file: File): string | null {
 export async function saveImage(file: File): Promise<string> {
   const ext = file.name.split('.').pop() ?? 'jpg'
   const filename = `${uid()}.${ext}`
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-
-  await mkdir(uploadDir, { recursive: true })
-
   const buffer = Buffer.from(await file.arrayBuffer())
+
+  // Production: upload to Vercel Blob storage.
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const blob = await put(`uploads/${filename}`, buffer, {
+      access: 'public',
+      contentType: file.type,
+    })
+    return blob.url
+  }
+
+  // Local development fallback: write to public/uploads.
+  const uploadDir = path.join(process.cwd(), 'public', 'uploads')
+  await mkdir(uploadDir, { recursive: true })
   const filepath = path.join(uploadDir, filename)
   await writeFile(filepath, buffer)
 
