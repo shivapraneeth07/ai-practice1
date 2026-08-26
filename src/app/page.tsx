@@ -23,6 +23,7 @@ import { prisma } from '@/lib/prisma'
 
 async function getFeaturedProperties() {
   try {
+    if (!process.env.DATABASE_URL) return []
     return await prisma.property.findMany({
       where: { status: 'AVAILABLE' },
       orderBy: { viewCount: 'desc' },

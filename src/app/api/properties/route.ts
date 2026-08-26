@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { propertySchema } from '@/lib/validations'
 import { searchProperties, type SearchFilters } from '@/lib/search-utils'
 
+export const dynamic = 'force-dynamic'
+
 function parseSearchParams(searchParams: URLSearchParams): SearchFilters {
   const num = (v: string | null): number | undefined =>
     v === null || v === '' || Number.isNaN(Number(v)) ? undefined : Number(v)

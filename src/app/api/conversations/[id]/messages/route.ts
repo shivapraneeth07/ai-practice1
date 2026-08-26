@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { messageSchema } from '@/lib/validations'
 import { createNotification } from '@/lib/notifications'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   _req: Request,
   { params }: { params: { id: string } }

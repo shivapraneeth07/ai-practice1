@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth-utils'
 import { validateImage, saveImage } from '@/lib/upload-utils'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser()
