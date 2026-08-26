@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "prisma:push": "prisma db push",
     "prisma:generate": "prisma generate",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "vercel-build": "prisma db push --skip-generate && tsx prisma/seed.ts && next build"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

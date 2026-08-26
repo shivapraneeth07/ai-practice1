@@ -527,15 +527,20 @@ async function main() {
   }
 
   // Notifications for seeker
-  await prisma.notification.create({
-    data: {
-      userId: seeker.id,
-      type: 'PROPERTY',
-      title: 'New homes in your area',
-      message: 'New properties are available in Kondapur and Gachibowli.',
-      link: '/properties?q=Kondapur',
-    },
+  const existingPropertyNotif = await prisma.notification.findFirst({
+    where: { userId: seeker.id, type: 'PROPERTY' },
   })
+  if (!existingPropertyNotif) {
+    await prisma.notification.create({
+      data: {
+        userId: seeker.id,
+        type: 'PROPERTY',
+        title: 'New homes in your area',
+        message: 'New properties are available in Kondapur and Gachibowli.',
+        link: '/properties?q=Kondapur',
+      },
+    })
+  }
 
   console.log(`✅ Seeded ${createdCount} properties, 4 users, demo conversations & visits.`)
   console.log('Demo logins: seeker@demo.com / owner@demo.com / admin@demo.com (password123)')
