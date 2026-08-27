@@ -46,7 +46,7 @@ export function PropertyCard({ property, userLat, userLng, className }: Property
   const topAmenities = property.amenities.slice(0, 3)
 
   return (
-    <Card className={cn('group overflow-hidden transition-shadow hover:shadow-md', className)}>
+    <Card className={cn('group overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-glow', className)}>
       <Link href={`/properties/${property.id}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {image ? (

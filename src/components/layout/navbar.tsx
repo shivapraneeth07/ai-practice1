@@ -15,13 +15,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
-import { getInitials } from '@/lib/utils'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { getInitials, cn } from '@/lib/utils'
 import { useUnreadCount } from '@/hooks/use-notifications'
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2">
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+    <Link href="/" className="group flex items-center gap-2">
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-violet-500 text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
         <Home className="h-5 w-5" />
       </span>
       <span className="text-xl font-bold tracking-tight">
@@ -35,6 +36,11 @@ function roleHref(role?: string) {
   if (role === 'OWNER') return '/owner/dashboard'
   if (role === 'ADMIN') return '/admin/dashboard'
   return '/seeker/dashboard'
+}
+
+function isActive(pathname: string, href: string) {
+  if (href === '/') return pathname === '/'
+  return pathname === href || pathname.startsWith(href + '/')
 }
 
 export function Navbar() {
@@ -54,22 +60,24 @@ export function Navbar() {
         ]
       : role === 'ADMIN'
         ? [{ href: '/admin/dashboard', label: 'Admin Panel' }]
-        : [
-            { href: '/properties', label: 'Find a Home' },
-            { href: '/properties', label: 'Search' },
-          ]
+        : [{ href: '/properties', label: 'Find a Home' }]
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Logo />
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-7 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href + link.label}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(
+                'relative text-sm font-medium transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:rounded-full after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:scale-x-100',
+                isActive(pathname, link.href)
+                  ? 'text-foreground after:scale-x-100'
+                  : 'text-muted-foreground'
+              )}
             >
               {link.label}
             </Link>
@@ -77,6 +85,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           {status === 'loading' ? null : session?.user ? (
             <>
               {role === 'OWNER' && (
@@ -99,7 +108,7 @@ export function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring">
-                    <Avatar className="h-9 w-9">
+                    <Avatar className="h-9 w-9 transition-transform duration-200 hover:scale-105">
                       <AvatarImage src={session.user.image || undefined} />
                       <AvatarFallback>{getInitials(session.user.name || 'U')}</AvatarFallback>
                     </Avatar>
@@ -141,24 +150,30 @@ export function Navbar() {
           )}
         </div>
 
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button
+            className="rounded-md p-2 transition-colors hover:bg-muted"
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {open && (
-        <div className="border-t bg-background p-4 md:hidden">
+        <div className="animate-in-up border-t bg-background p-4 md:hidden">
           <nav className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href + link.label}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                className={cn(
+                  'text-sm font-medium transition-colors hover:text-primary',
+                  isActive(pathname, link.href) ? 'text-primary' : 'text-muted-foreground'
+                )}
               >
                 {link.label}
               </Link>
