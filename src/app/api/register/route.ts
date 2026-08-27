@@ -4,8 +4,19 @@ import { prisma } from '@/lib/prisma'
 import { signupSchema } from '@/lib/validations'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
+  if (!process.env.DATABASE_URL) {
+    return NextResponse.json(
+      {
+        error:
+          'The database is not configured. Add DATABASE_URL in Vercel Project Settings and redeploy.',
+      },
+      { status: 503 }
+    )
+  }
+
   try {
     const body = await req.json()
     const parsed = signupSchema.safeParse(body)
@@ -49,18 +60,9 @@ export async function POST(req: Request) {
     )
   } catch (error) {
     console.error('Registration error:', error)
-    if (!process.env.DATABASE_URL) {
-      return NextResponse.json(
-        {
-          error:
-            'The database is not configured. Add DATABASE_URL to your environment variables (Vercel -> Project -> Settings -> Environment Variables) and redeploy.',
-        },
-        { status: 500 }
-      )
-    }
     return NextResponse.json(
-      { error: 'Something went wrong while creating your account. Please try again.' },
-      { status: 500 }
+      { error: 'The database is currently unavailable. Please try again shortly.' },
+      { status: 503 }
     )
   }
 }
