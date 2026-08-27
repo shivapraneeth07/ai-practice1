@@ -10,14 +10,14 @@ import { requireRole } from '@/lib/auth-utils'
 import { DashboardShell } from '@/components/layout/dashboard-shell'
 
 const navItems = [
-  { href: '/owner/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/owner/properties', label: 'My Properties', icon: Building2 },
-  { href: '/owner/properties/new', label: 'Add Property', icon: Building2 },
-  { href: '/owner/enquiries', label: 'Enquiries', icon: Inbox },
-  { href: '/owner/messages', label: 'Messages', icon: MessagesSquare },
-  { href: '/owner/visits', label: 'Visits', icon: CalendarCheck },
-  { href: '/owner/profile', label: 'Profile', icon: UserCircle },
-]
+  { href: '/owner/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+  { href: '/owner/properties', label: 'My Properties', icon: 'Building2' },
+  { href: '/owner/properties/new', label: 'Add Property', icon: 'Building2' },
+  { href: '/owner/enquiries', label: 'Enquiries', icon: 'Inbox' },
+  { href: '/owner/messages', label: 'Messages', icon: 'MessagesSquare' },
+  { href: '/owner/visits', label: 'Visits', icon: 'CalendarCheck' },
+  { href: '/owner/profile', label: 'Profile', icon: 'UserCircle' },
+] as const
 
 export default async function OwnerLayout({ children }: { children: React.ReactNode }) {
   await requireRole(['OWNER'])

@@ -2,12 +2,41 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import {
+  Building2,
+  Bell,
+  CalendarCheck,
+  Flag,
+  Heart,
+  Inbox,
+  LayoutDashboard,
+  MessagesSquare,
+  Search,
+  ShieldCheck,
+  UserCircle,
+  Users,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+const navIcons = {
+  Bell,
+  Building2,
+  CalendarCheck,
+  Flag,
+  Heart,
+  Inbox,
+  LayoutDashboard,
+  MessagesSquare,
+  Search,
+  ShieldCheck,
+  UserCircle,
+  Users,
+}
 
 export interface NavItem {
   href: string
   label: string
-  icon: React.ComponentType<{ className?: string }>
+  icon: keyof typeof navIcons
 }
 
 export function DashboardShell({
@@ -15,7 +44,7 @@ export function DashboardShell({
   children,
   roleLabel,
 }: {
-  navItems: NavItem[]
+  navItems: readonly NavItem[]
   children: React.ReactNode
   roleLabel: string
 }) {
@@ -30,6 +59,7 @@ export function DashboardShell({
         <nav className="flex gap-1 overflow-x-auto pb-2 md:flex-col md:pb-0">
           {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + '/')
+            const Icon = navIcons[item.icon]
             return (
               <Link
                 key={item.href}
@@ -41,7 +71,7 @@ export function DashboardShell({
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
-                <item.icon className="h-4 w-4" />
+                <Icon className="h-4 w-4" />
                 {item.label}
               </Link>
             )
